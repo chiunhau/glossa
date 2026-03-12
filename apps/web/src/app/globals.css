@@ -1,0 +1,144 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-outfit);
+	--font-mono: var(--font-dm-mono);
+	--font-display: var(--font-climate-crisis);
+
+	/* Glossa dark palette */
+	--color-bg: #0a0a0a;
+	--color-bg2: #111111;
+	--color-bg3: #181818;
+	--color-lime: #c8f135;
+	--color-lime-dim: rgba(200, 241, 53, 0.08);
+	--color-lime-mid: rgba(200, 241, 53, 0.15);
+	--color-muted: #666666;
+	--color-faint: #333333;
+	--color-white: #f0f0f0;
+
+	/* shadcn token mapping */
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+	--background: #0a0a0a;
+	--foreground: #f0f0f0;
+	--card: #111111;
+	--card-foreground: #f0f0f0;
+	--popover: #111111;
+	--popover-foreground: #f0f0f0;
+	--primary: #c8f135;
+	--primary-foreground: #0a0a0a;
+	--secondary: #181818;
+	--secondary-foreground: #f0f0f0;
+	--muted: #181818;
+	--muted-foreground: #666666;
+	--accent: #181818;
+	--accent-foreground: #f0f0f0;
+	--destructive: oklch(0.577 0.245 27.325);
+	--border: rgba(255, 255, 255, 0.07);
+	--input: rgba(255, 255, 255, 0.12);
+	--ring: #c8f135;
+	--radius: 0.5rem;
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-bg text-white font-light font-sans;
+		overflow-x: hidden;
+	}
+	html {
+		@apply font-sans;
+		scroll-behavior: smooth;
+	}
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes panelIn {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fadeUp {
+	animation: fadeUp 0.6s ease forwards;
+	opacity: 0;
+}
+.delay-100 {
+	animation-delay: 0.1s;
+}
+.delay-180 {
+	animation-delay: 0.18s;
+}
+.delay-260 {
+	animation-delay: 0.26s;
+}
+.delay-340 {
+	animation-delay: 0.34s;
+}
+.delay-420 {
+	animation-delay: 0.42s;
+}
+
+.animate-panelIn {
+	animation: panelIn 0.18s ease;
+}
+
+/* Reveal on scroll */
+.reveal {
+	opacity: 0;
+	transform: translateY(18px);
+	transition:
+		opacity 0.6s ease,
+		transform 0.6s ease;
+}
+.reveal.visible {
+	opacity: 1;
+	transform: none;
+}

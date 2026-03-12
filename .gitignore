@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Obsidian plugin build output
+apps/plugin/main.js
+apps/plugin/data.json
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+
+# System
+.DS_Store
+.obsidian/
+.vscode/
+demo-vault/

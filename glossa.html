@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>glossa.md — Language flashcards for Obsidian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #181818;
+  --text: #f0f0f0;
+  --muted: #666;
+  --faint: #333;
+  --lime: #c8f135;
+  --lime-dim: rgba(200,241,53,0.08);
+  --lime-mid: rgba(200,241,53,0.15);
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --white: #ffffff;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,10,0.9);
+  backdrop-filter: blur(16px);
+}
+
+.nav-logo {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700; font-size: 1.05rem;
+  letter-spacing: -0.03em;
+  color: var(--white); text-decoration: none;
+}
+.nav-logo span { color: var(--lime); }
+
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.55rem 1.3rem;
+  background: var(--lime); color: var(--bg);
+  border: none; border-radius: 3px; cursor: pointer;
+  text-decoration: none; font-weight: 500; transition: opacity 0.15s;
+}
+.nav-cta:hover { opacity: 0.85; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  padding: 9rem 2.5rem 5rem;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+  max-width: 1200px; margin: 0 auto;
+}
+
+.hero::before {
+  content: 'GL';
+  position: absolute; right: -0.05em; top: 50%; transform: translateY(-52%);
+  font-family: 'Outfit', sans-serif; font-weight: 900;
+  font-size: clamp(18rem, 28vw, 36rem); line-height: 1;
+  color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+  pointer-events: none; letter-spacing: -0.05em; user-select: none;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.6s 0.1s ease forwards;
+}
+.hero-tag::before {
+  content: ''; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--lime);
+}
+
+.hero-h1 {
+  font-family: 'Outfit', sans-serif; font-weight: 900;
+  font-size: clamp(3.8rem, 9vw, 8.5rem);
+  line-height: 0.92; letter-spacing: -0.04em;
+  color: var(--white); margin-bottom: 2.5rem; max-width: 820px;
+  opacity: 0; animation: fadeUp 0.6s 0.18s ease forwards;
+}
+.hero-h1 .accent { color: var(--lime); }
+.hero-h1 .thin { font-weight: 200; color: var(--muted); }
+
+.hero-sub {
+  font-size: clamp(1rem, 1.5vw, 1.2rem); font-weight: 300;
+  color: var(--muted); max-width: 460px; line-height: 1.65; margin-bottom: 3rem;
+  opacity: 0; animation: fadeUp 0.6s 0.26s ease forwards;
+}
+
+.hero-actions {
+  display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.6s 0.34s ease forwards;
+}
+
+.btn-lime {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.9rem 2rem; background: var(--lime); color: var(--bg);
+  border: none; border-radius: 3px; cursor: pointer;
+  text-decoration: none; font-weight: 500; transition: opacity 0.15s;
+}
+.btn-lime:hover { opacity: 0.85; }
+
+.btn-outline {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.9rem 2rem; background: transparent; color: var(--muted);
+  border: 1px solid var(--faint); border-radius: 3px;
+  cursor: pointer; text-decoration: none; transition: all 0.15s;
+}
+.btn-outline:hover { border-color: var(--muted); color: var(--text); }
+
+.hero-stats {
+  display: flex; gap: 3rem; margin-top: 5rem;
+  padding-top: 2.5rem; border-top: 1px solid var(--border);
+  opacity: 0; animation: fadeUp 0.6s 0.42s ease forwards; flex-wrap: wrap;
+}
+.stat-val {
+  font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: 2rem; letter-spacing: -0.04em; color: var(--white);
+  line-height: 1; margin-bottom: 0.25rem;
+}
+.stat-val span { color: var(--lime); }
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+}
+
+/* ── SECTIONS ── */
+.section { max-width: 1200px; margin: 0 auto; padding: 7rem 2.5rem; }
+
+.s-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 1.2rem;
+}
+.s-title {
+  font-family: 'Outfit', sans-serif; font-weight: 800;
+  font-size: clamp(2.4rem, 4.5vw, 4rem); letter-spacing: -0.04em;
+  line-height: 0.95; color: var(--white); margin-bottom: 1.2rem;
+}
+.s-title .thin { font-weight: 200; color: var(--muted); }
+.s-body { font-size: 1rem; font-weight: 300; color: var(--muted); max-width: 480px; line-height: 1.7; }
+
+/* ── BENTO ── */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; margin-top: 4rem;
+}
+
+.bc { background: var(--bg2); padding: 2.2rem; position: relative; transition: background 0.2s; overflow: hidden; }
+.bc:hover { background: var(--bg3); }
+
+.bc-a { grid-column: span 5; grid-row: span 2; }
+.bc-b { grid-column: span 7; }
+.bc-c { grid-column: span 4; }
+.bc-d { grid-column: span 3; }
+.bc-e { grid-column: span 5; }
+.bc-f { grid-column: span 7; }
+
+.bc-num {
+  font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 0.65rem;
+}
+.bc-title {
+  font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: 1.15rem; letter-spacing: -0.02em;
+  color: var(--white); margin-bottom: 0.5rem; line-height: 1.2;
+}
+.bc-a .bc-title { font-size: 1.75rem; margin-bottom: 0.7rem; }
+.bc-body { font-size: 0.88rem; font-weight: 300; color: var(--muted); line-height: 1.6; }
+
+.mini-card {
+  margin-top: 1.8rem; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 6px; padding: 1.2rem;
+}
+.mc-word {
+  font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: 1.6rem; letter-spacing: -0.03em; color: var(--white); line-height: 1; margin-bottom: 0.2rem;
+}
+.mc-class {
+  font-family: 'DM Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 0.1em; color: var(--lime); text-transform: uppercase; margin-bottom: 0.8rem;
+}
+.mc-div { height: 1px; background: var(--border); margin-bottom: 0.8rem; }
+.mc-trans { font-size: 0.85rem; font-weight: 300; color: var(--muted); font-style: italic; }
+.mc-ex {
+  font-size: 0.77rem; color: rgba(240,240,240,0.35); margin-top: 0.6rem;
+  line-height: 1.5; border-left: 2px solid rgba(200,241,53,0.25); padding-left: 0.6rem;
+}
+
+.bc-code {
+  margin-top: 1.1rem; background: var(--bg);
+  border-radius: 4px; padding: 1rem 1.1rem;
+  font-family: 'DM Mono', monospace; font-size: 0.7rem;
+  line-height: 1.85; color: rgba(240,240,240,0.4);
+}
+.ck { color: #f6c90e; } .cv { color: #a8d8a8; } .ca { color: var(--lime); } .cc { color: rgba(240,240,240,0.2); }
+
+.bc-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 1.1rem; }
+.bc-tag {
+  font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem; border-radius: 100px;
+  border: 1px solid var(--faint); color: var(--muted);
+}
+.bc-tag.hi { border-color: var(--lime); color: var(--lime); background: var(--lime-dim); }
+
+.bc-keys { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.1rem; }
+.bc-key-row { display: flex; align-items: center; gap: 0.75rem; }
+.kbadge {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  padding: 0.2rem 0.5rem; background: var(--bg);
+  border: 1px solid var(--border2); border-radius: 3px;
+  color: var(--text); min-width: 3.5rem; text-align: center;
+}
+.kdesc { font-size: 0.8rem; font-weight: 300; color: var(--muted); }
+
+.ext-row { display: flex; align-items: center; gap: 0.6rem; margin-top: 1.1rem; }
+.ext-b {
+  flex: 1; background: var(--bg); border: 1px solid var(--border2);
+  border-radius: 5px; padding: 0.7rem 0.9rem;
+}
+.ext-bar { height: 5px; background: var(--faint); border-radius: 3px; margin-bottom: 0.5rem; width: 65%; }
+.ext-sel {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  color: var(--bg); background: var(--lime);
+  padding: 0.1rem 0.3rem; border-radius: 2px;
+}
+.ext-arr { font-size: 1.1rem; color: var(--lime); }
+.ext-v {
+  background: var(--bg); border: 1px solid var(--lime-mid);
+  border-radius: 5px; padding: 0.7rem 0.9rem;
+  font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--lime);
+}
+
+/* ── PRICING ── */
+.pricing-wrap { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.pricing-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; margin-top: 4rem;
+  border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+}
+@media (max-width: 680px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+.pc {
+  padding: 2.8rem; border-right: 1px solid var(--border); position: relative;
+}
+.pc:last-child { border-right: none; }
+.pc.feat { background: var(--bg3); }
+
+.p-tier {
+  font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1.5rem;
+}
+.pc.feat .p-tier { color: var(--lime); }
+
+.p-price {
+  font-family: 'Outfit', sans-serif; font-weight: 900;
+  font-size: 4.5rem; letter-spacing: -0.05em;
+  color: var(--white); line-height: 1; margin-bottom: 0.4rem;
+}
+.p-price sup { font-size: 1.5rem; vertical-align: super; font-weight: 700; }
+.p-price .fw { font-size: 2.8rem; }
+
+.p-note {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 2.5rem;
+}
+.p-div { height: 1px; background: var(--border); margin-bottom: 2rem; }
+
+.p-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2.5rem; }
+.p-list li {
+  font-size: 0.95rem; font-weight: 300; color: var(--text);
+  display: flex; align-items: flex-start; gap: 0.7rem; line-height: 1.4;
+}
+.p-list li::before { content: '✓'; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--lime); flex-shrink: 0; margin-top: 0.15rem; }
+.p-list li.off { color: var(--faint); }
+.p-list li.off::before { content: '—'; color: var(--faint); }
+
+.btn-p {
+  width: 100%; font-family: 'DM Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.9rem; border-radius: 3px; cursor: pointer;
+  text-align: center; text-decoration: none; display: block; transition: all 0.15s;
+}
+.btn-p-ghost { background: transparent; border: 1px solid var(--faint); color: var(--muted); }
+.btn-p-ghost:hover { border-color: var(--muted); color: var(--text); }
+.btn-p-lime { background: var(--lime); border: 1px solid var(--lime); color: var(--bg); font-weight: 500; }
+.btn-p-lime:hover { opacity: 0.85; }
+
+.soon {
+  position: absolute; top: 1.2rem; right: 1.2rem;
+  font-family: 'DM Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); background: var(--bg2);
+  border: 1px solid var(--faint); border-radius: 2px; padding: 0.2rem 0.55rem;
+}
+.pricing-foot {
+  text-align: center; margin-top: 1.5rem;
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.08em; color: var(--faint); text-transform: uppercase;
+}
+
+/* ── INSTALL ── */
+.i-tabs {
+  display: flex; gap: 0;
+  border: 1px solid var(--border); border-bottom: none;
+  border-radius: 5px 5px 0 0; overflow: hidden;
+  width: fit-content; margin-top: 3.5rem;
+}
+.i-tab {
+  font-family: 'DM Mono', monospace; font-size: 0.68rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.65rem 1.4rem; background: transparent; color: var(--muted);
+  border: none; border-right: 1px solid var(--border);
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.i-tab:last-child { border-right: none; }
+.i-tab:hover { color: var(--text); background: var(--bg2); }
+.i-tab.active { background: var(--bg2); color: var(--lime); }
+
+.i-rec {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 0.06em; color: var(--bg);
+  background: var(--lime); border-radius: 2px;
+  padding: 0.1rem 0.35rem; margin-left: 0.4rem; font-weight: 500;
+}
+
+.i-panel { display: none; }
+.i-panel.active { display: block; animation: panelIn 0.18s ease; }
+
+.i-card { border: 1px solid var(--border); border-radius: 0 5px 5px 5px; overflow: hidden; background: var(--bg2); }
+.i-head { padding: 1.6rem 2rem; border-bottom: 1px solid var(--border); background: var(--bg3); }
+.i-head-t { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; color: var(--white); margin-bottom: 0.2rem; }
+.i-head-d { font-size: 0.88rem; font-weight: 300; color: var(--muted); }
+
+.i-steps { padding: 2rem; display: flex; flex-direction: column; gap: 0; }
+.i-step { display: grid; grid-template-columns: 2rem 1fr; gap: 0 1.1rem; padding-bottom: 1.8rem; position: relative; }
+.i-step:last-child { padding-bottom: 0; }
+.i-step:not(:last-child)::before {
+  content: ''; position: absolute; left: 0.95rem; top: 2rem; bottom: 0;
+  width: 1px; background: var(--border);
+}
+.i-n {
+  width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--faint);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted);
+  flex-shrink: 0; position: relative; z-index: 1;
+}
+.i-step.hi .i-n { background: var(--lime-dim); border-color: var(--lime); color: var(--lime); }
+
+.i-b { padding-top: 0.25rem; }
+.i-label { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--white); margin-bottom: 0.35rem; }
+.i-note { font-size: 0.87rem; font-weight: 300; color: var(--muted); line-height: 1.55; }
+
+.code-row {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 3px; padding: 0.65rem 0.85rem; margin-top: 0.55rem;
+}
+.code-row code { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: #a8d8a8; flex: 1; word-break: break-all; }
+
+.cbtn {
+  flex-shrink: 0; background: transparent; border: 1px solid var(--faint);
+  border-radius: 2px; color: var(--muted);
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  padding: 0.2rem 0.5rem; cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+}
+.cbtn:hover { border-color: var(--muted); color: var(--text); }
+.cbtn.copied { border-color: var(--lime); color: var(--lime); }
+
+.tip-row {
+  display: flex; gap: 0.5rem; padding: 0.7rem 0.85rem;
+  border-radius: 3px; font-size: 0.8rem; font-weight: 300;
+  line-height: 1.5; margin-top: 0.55rem;
+}
+.tip-lime { background: var(--lime-dim); border: 1px solid rgba(200,241,53,0.15); color: var(--lime); }
+.tip-n { background: var(--bg); border: 1px solid var(--border); color: var(--muted); }
+
+.file-rows { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.5rem; }
+.file-row {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 3px; padding: 0.5rem 0.75rem;
+  text-decoration: none; transition: border-color 0.15s;
+}
+.file-row:hover { border-color: var(--border2); }
+.fext { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.06em; color: var(--muted); background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; padding: 0.1rem 0.35rem; }
+.fname { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--lime); flex: 1; }
+
+.post-install {
+  margin-top: 3rem; padding: 2.2rem;
+  border: 1px solid var(--border); border-radius: 5px; background: var(--bg2);
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+}
+.post-install p:first-child { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--white); margin-bottom: 0.3rem; }
+.post-install p:last-child { font-size: 0.88rem; font-weight: 300; color: var(--muted); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  max-width: 1200px; margin: 0 auto; padding: 2rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+.f-logo { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: -0.03em; color: var(--white); text-decoration: none; }
+.f-logo span { color: var(--lime); }
+.f-links { display: flex; gap: 2rem; list-style: none; }
+.f-links a { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+.f-links a:hover { color: var(--text); }
+.f-note { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.06em; color: var(--faint); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes panelIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .bc-a,.bc-b,.bc-c,.bc-d,.bc-e,.bc-f { grid-column: span 12; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .section { padding: 5rem 1.5rem; }
+  .hero { padding: 7rem 1.5rem 4rem; }
+  .hero::before { display: none; }
+  .pricing-wrap .section { padding: 5rem 1.5rem; }
+  footer { padding: 1.8rem 1.5rem; }
+  .i-steps { padding: 1.5rem; }
+  .i-head { padding: 1.2rem 1.5rem; }
+  .post-install { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">glossa<span>.md</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#install">Install</a></li>
+  </ul>
+  <a href="#install" class="nav-cta">Install free</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-tag">Obsidian plugin · Language learning</p>
+  <h1 class="hero-h1">
+    Turn any word into<br>
+    <span class="accent">a flashcard</span><br>
+    <span class="thin">in your vault —<br>instantly.</span>
+  </h1>
+  <p class="hero-sub">Highlight any word in your notes or on any webpage. Glossa generates a structured flashcard and saves it as markdown in your Obsidian vault — no copy-pasting, no switching apps.</p>
+  <div class="hero-actions">
+    <a href="#install" class="btn-lime">Install for free →</a>
+    <a href="#features" class="btn-outline">See features</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-val">Free<span>.</span></div>
+      <div class="stat-label">Bring your own Gemini key</div>
+    </div>
+    <div>
+      <div class="stat-val">0<span>ms</span></div>
+      <div class="stat-label">Backend latency · no proxy</div>
+    </div>
+    <div>
+      <div class="stat-val">100<span>%</span></div>
+      <div class="stat-label">Your vault · your data</div>
+    </div>
+  </div>
+</div>
+
+<div style="border-top:1px solid var(--border);max-width:1200px;margin:0 auto;"></div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="reveal">
+    <p class="s-label">Features</p>
+    <h2 class="s-title">Everything you need.<br><span class="thin">Nothing you don't.</span></h2>
+  </div>
+
+  <div class="bento reveal">
+
+    <div class="bc bc-a">
+      <div class="bc-num">01 · Core</div>
+      <div class="bc-title">AI-generated flashcard notes</div>
+      <div class="bc-body">Highlight any word or phrase, right-click, done. Gemini returns the dictionary form, grammar class, translation, and example sentences — all saved as a markdown note in your vault.</div>
+      <div class="mini-card">
+        <div class="mc-word">haluaminen</div>
+        <div class="mc-class">verb · infinitive</div>
+        <div class="mc-div"></div>
+        <div class="mc-trans">to want, to desire</div>
+        <div class="mc-ex">Haluan oppia suomea joka päivä.</div>
+      </div>
+    </div>
+
+    <div class="bc bc-b">
+      <div class="bc-num">02 · Vault-native</div>
+      <div class="bc-title">Backlinks, not just cards</div>
+      <div class="bc-body">Selected text becomes a wiki-link. Your reading notes stay connected to every word you learned — visible in your graph, searchable, linked forever.</div>
+      <div class="bc-code">
+        <span class="cc"># In your reading note</span><br>
+        Luin [[<span class="ca">haluaminen</span>|haluamisesta]] tänään.<br><br>
+        <span class="cc"># Graph view</span><br>
+        [[<span class="ca">haluaminen</span>]] ← <span class="cv">Finnish notes.md</span><br>
+        [[<span class="ca">kirjoittaa</span>]]  ← <span class="cv">Book review.md</span>
+      </div>
+    </div>
+
+    <div class="bc bc-c">
+      <div class="bc-num">03 · Flexible</div>
+      <div class="bc-title">Custom fields & prompts</div>
+      <div class="bc-body">Define exactly what the AI returns. Add etymology, register, conjugation — anything.</div>
+      <div class="bc-tags">
+        <span class="bc-tag hi">dictionary_form</span>
+        <span class="bc-tag hi">word_class</span>
+        <span class="bc-tag hi">translation</span>
+        <span class="bc-tag">etymology</span>
+        <span class="bc-tag">register</span>
+        <span class="bc-tag">conjugation</span>
+      </div>
+    </div>
+
+    <div class="bc bc-d">
+      <div class="bc-num">04 · Practice</div>
+      <div class="bc-title">Built-in flip-card sessions</div>
+      <div class="bc-body">Filter by note, word class, or group.</div>
+      <div class="bc-keys">
+        <div class="bc-key-row"><span class="kbadge">Space</span><span class="kdesc">Reveal</span></div>
+        <div class="bc-key-row"><span class="kbadge">→</span><span class="kdesc">Know it</span></div>
+        <div class="bc-key-row"><span class="kbadge">←</span><span class="kdesc">Don't know</span></div>
+      </div>
+    </div>
+
+    <div class="bc bc-e">
+      <div class="bc-num">05 · Browser</div>
+      <div class="bc-title">Flashcard from any webpage</div>
+      <div class="bc-body">Chrome, Brave, Edge extension. Select text anywhere on the web, card lands in your vault.</div>
+      <div class="ext-row">
+        <div class="ext-b">
+          <div class="ext-bar"></div>
+          <span class="ext-sel">schadenfreude</span>
+        </div>
+        <div class="ext-arr">→</div>
+        <div class="ext-v">vault ✓</div>
+      </div>
+    </div>
+
+    <div class="bc bc-f">
+      <div class="bc-num">06 · Privacy</div>
+      <div class="bc-title">Your key. Your data. No middleman.</div>
+      <div class="bc-body">Glossa calls Gemini directly from the plugin. No proxy, no server, no account. Your vault never leaves your machine. The free Gemini API key is all you need.</div>
+      <div class="bc-code">
+        <span class="ck">model</span>: <span class="cv">gemini-2.5-flash-lite</span><br>
+        <span class="ck">key</span>:   <span class="cv">your own · free · direct</span><br>
+        <span class="ck">proxy</span>: <span class="cc">none</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRICING -->
+<div class="pricing-wrap">
+<section class="section" id="pricing">
+  <div class="reveal">
+    <p class="s-label">Pricing</p>
+    <h2 class="s-title">Pay once.<br><span class="thin">Own it forever.</span></h2>
+    <p class="s-body" style="margin-top:1rem;">Bring your own free Gemini key. No subscriptions. No backend costs passed to you.</p>
+  </div>
+  <div class="pricing-grid reveal">
+    <div class="pc">
+      <div class="p-tier">Free</div>
+      <div class="p-price"><span class="fw">Free</span></div>
+      <div class="p-note">Forever · BYOK</div>
+      <div class="p-div"></div>
+      <ul class="p-list">
+        <li>30 flashcard generations / month</li>
+        <li>Unlimited practice sessions</li>
+        <li>Basic practice filters</li>
+        <li>Your own Gemini API key</li>
+        <li class="off">Custom prompts & output fields</li>
+        <li class="off">Note body templates</li>
+        <li class="off">Browser extension</li>
+        <li class="off">All practice filter fields</li>
+      </ul>
+      <a href="#install" class="btn-p btn-p-ghost">Install free →</a>
+    </div>
+    <div class="pc feat">
+      <span class="soon">Coming soon</span>
+      <div class="p-tier">Pro</div>
+      <div class="p-price"><sup>$</sup>15</div>
+      <div class="p-note">One-time · BYOK · Lifetime</div>
+      <div class="p-div"></div>
+      <ul class="p-list">
+        <li>Unlimited flashcard generations</li>
+        <li>Unlimited practice sessions</li>
+        <li>All practice filter fields</li>
+        <li>Your own Gemini API key</li>
+        <li>Custom prompts & output fields</li>
+        <li>Note body templates</li>
+        <li>Browser extension</li>
+        <li>Priority email support</li>
+      </ul>
+      <a href="#" class="btn-p btn-p-lime">Notify me when available</a>
+    </div>
+  </div>
+  <p class="pricing-foot reveal">Pro Proxy tier (no API key needed) · coming after early traction</p>
+</section>
+</div>
+
+<!-- INSTALL -->
+<section class="section" id="install">
+  <div class="reveal">
+    <p class="s-label">Installation</p>
+    <h2 class="s-title">Running in<br><span class="thin">two minutes.</span></h2>
+    <p class="s-body" style="margin-top:1rem;">Not in the community directory yet — pick the method that suits you.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="i-tabs">
+      <button class="i-tab active" onclick="setTab('brat')">BRAT <span class="i-rec">rec</span></button>
+      <button class="i-tab" onclick="setTab('manual')">Manual</button>
+      <button class="i-tab" onclick="setTab('cli')">CLI</button>
+    </div>
+
+    <div class="i-panel active i-card" id="t-brat">
+      <div class="i-head">
+        <div class="i-head-t">Install via BRAT</div>
+        <div class="i-head-d">BRAT installs and auto-updates any GitHub-hosted Obsidian plugin. Most power users already have it.</div>
+      </div>
+      <div class="i-steps">
+        <div class="i-step">
+          <div class="i-n">1</div>
+          <div class="i-b">
+            <p class="i-label">Install BRAT from Community Plugins</p>
+            <p class="i-note">Settings → Community Plugins → Browse → search "BRAT" → Install → Enable.</p>
+            <div class="tip-row tip-n">Already have BRAT? Skip to step 2.</div>
+          </div>
+        </div>
+        <div class="i-step hi">
+          <div class="i-n">2</div>
+          <div class="i-b">
+            <p class="i-label">Add Glossa via BRAT</p>
+            <p class="i-note">Command palette (⌘P / Ctrl+P) → <strong>BRAT: Add a beta plugin</strong> → paste:</p>
+            <div class="code-row">
+              <code>https://github.com/chiunhau/ai-flashcards-obsidian-plugin</code>
+              <button class="cbtn" onclick="cp(this,'https://github.com/chiunhau/ai-flashcards-obsidian-plugin')">copy</button>
+            </div>
+          </div>
+        </div>
+        <div class="i-step">
+          <div class="i-n">3</div>
+          <div class="i-b">
+            <p class="i-label">Enable the plugin</p>
+            <p class="i-note">Settings → Community Plugins → find "Glossa" → toggle on.</p>
+            <div class="tip-row tip-lime">BRAT will auto-update Glossa on every new release.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="i-panel i-card" id="t-manual">
+      <div class="i-head">
+        <div class="i-head-t">Manual Installation</div>
+        <div class="i-head-d">Download three files and place them in your vault. No extra tools needed.</div>
+      </div>
+      <div class="i-steps">
+        <div class="i-step">
+          <div class="i-n">1</div>
+          <div class="i-b">
+            <p class="i-label">Download the latest release files</p>
+            <div class="file-rows">
+              <a href="#" class="file-row"><span class="fext">JS</span><span class="fname">main.js</span></a>
+              <a href="#" class="file-row"><span class="fext">JSON</span><span class="fname">manifest.json</span></a>
+              <a href="#" class="file-row"><span class="fext">CSS</span><span class="fname">styles.css</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="i-step hi">
+          <div class="i-n">2</div>
+          <div class="i-b">
+            <p class="i-label">Place files in your vault</p>
+            <p class="i-note">Create this folder inside your vault and copy all three files into it:</p>
+            <div class="code-row">
+              <code>.obsidian/plugins/ai-language-flashcards/</code>
+              <button class="cbtn" onclick="cp(this,'.obsidian/plugins/ai-language-flashcards/')">copy</button>
+            </div>
+            <div class="tip-row tip-n"><code style="font-family:'DM Mono',monospace">.obsidian</code> is hidden — ⌘⇧. on Mac, "Hidden items" on Windows.</div>
+          </div>
+        </div>
+        <div class="i-step">
+          <div class="i-n">3</div>
+          <div class="i-b">
+            <p class="i-label">Enable the plugin</p>
+            <p class="i-note">Reload Obsidian → Settings → Community Plugins → toggle on "Glossa".</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="i-panel i-card" id="t-cli">
+      <div class="i-head">
+        <div class="i-head-t">Terminal Installation</div>
+        <div class="i-head-d">Clone directly into your vault. Best for contributors or those who want the latest commits.</div>
+      </div>
+      <div class="i-steps">
+        <div class="i-step hi">
+          <div class="i-n">1</div>
+          <div class="i-b">
+            <p class="i-label">Navigate to your vault's plugins folder</p>
+            <div class="code-row">
+              <code>cd /path/to/vault/.obsidian/plugins</code>
+              <button class="cbtn" onclick="cp(this,'cd /path/to/vault/.obsidian/plugins')">copy</button>
+            </div>
+          </div>
+        </div>
+        <div class="i-step hi">
+          <div class="i-n">2</div>
+          <div class="i-b">
+            <p class="i-label">Clone the repository</p>
+            <div class="code-row">
+              <code>git clone https://github.com/chiunhau/ai-flashcards-obsidian-plugin ai-language-flashcards</code>
+              <button class="cbtn" onclick="cp(this,'git clone https://github.com/chiunhau/ai-flashcards-obsidian-plugin ai-language-flashcards')">copy</button>
+            </div>
+          </div>
+        </div>
+        <div class="i-step">
+          <div class="i-n">3</div>
+          <div class="i-b">
+            <p class="i-label">Enable the plugin</p>
+            <p class="i-note">Reload Obsidian → Settings → Community Plugins → toggle on "Glossa".</p>
+            <div class="tip-row tip-lime">To update later: <code style="font-family:'DM Mono',monospace">git pull</code> inside the folder.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-install reveal">
+      <div>
+        <p>Next: get your free Gemini API key.</p>
+        <p>Free from Google AI Studio — no credit card, takes 30 seconds.</p>
+      </div>
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" class="btn-lime">Get API key →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="f-logo">glossa<span>.md</span></a>
+  <ul class="f-links">
+    <li><a href="https://github.com/chiunhau/ai-flashcards-obsidian-plugin" target="_blank">GitHub</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#install">Install</a></li>
+  </ul>
+  <p class="f-note">Open source · Free to use</p>
+</footer>
+
+<script>
+function setTab(id) {
+  document.querySelectorAll('.i-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['brat','manual','cli'][i] === id);
+  });
+  document.querySelectorAll('.i-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 't-' + id);
+  });
+}
+
+function cp(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

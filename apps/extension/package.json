@@ -1,0 +1,8 @@
+{
+  "name": "@glossa/extension",
+  "version": "1.0.0",
+  "description": "Browser extension — create Glossa flashcards from any webpage.",
+  "private": true,
+  "author": "chiunhau",
+  "license": "MIT"
+}

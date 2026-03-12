@@ -1,0 +1,10 @@
+{
+  "name": "glossa",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "release:plugin": "bash scripts/release-plugin.sh"
+  }
+}
