@@ -167,26 +167,35 @@ source: {{source_text}}
 
 ## Releasing a New Plugin Version
 
-From the repo root:
+To release a new version of the plugin, run the release script from the repository root. This handles the version bump, file synchronization, git commit, and git tagging in one step.
+
+### Step 1: Bump and Tag Locally
+Choose the appropriate semantic version bump and run:
 
 ```bash
-npm run release:plugin           # patch bump (default)
-npm run release:plugin minor     # minor bump
-npm run release:plugin major     # major bump
+npm run release:plugin           # patch bump (e.g. 0.1.0 -> 0.1.1)
+npm run release:plugin minor     # minor bump (e.g. 0.1.0 -> 0.2.0)
+npm run release:plugin major     # major bump (e.g. 0.1.0 -> 1.0.0)
 ```
 
-This script:
-1. Bumps the version in `apps/plugin/package.json`
-2. Syncs the version into `manifest.json` and `versions.json`
-3. Commits and tags the release
+**What this does under the hood:**
+1. Uses `npm version` to bump `apps/plugin/package.json`
+2. Executes `version-bump.mjs` to automatically sync the new version into `manifest.json` and `versions.json`
+3. Commits the changes as `Release plugin [version]`
+4. Creates a Git tag matching the version (e.g. `0.2.0`)
 
-Then push to trigger the GitHub Actions release:
+### Step 2: Push to GitHub Actions
+Push your newly created commit and tags to the remote repository:
 
 ```bash
 git push && git push --tags
 ```
 
-GitHub Actions builds the plugin and publishes a GitHub release with `main.js`, `manifest.json`, and `styles.css` attached.
+### Step 3: GitHub Actions Auto-Release
+Once the tag is pushed, the `Release Obsidian plugin` GitHub Action triggers automatically. It will:
+- Run `npm install` and build the plugin
+- Create a new official GitHub Release using `softprops/action-gh-release`
+- Attach the built files (`main.js`, `manifest.json`, and `styles.css`) as release assets
 
 ---
 
